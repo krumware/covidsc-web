@@ -46,15 +46,21 @@
       <div class="col-4">
         <span><a href='#'><font size='+1'>Symptom Reporting</font></a></span>
       </div>
-      <div class="col-4">
-        <span><a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19/monitoring-testing-covid-19">Cases / Deaths</a>
+      <div class="col-2">
+        <span><a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19/monitoring-testing-covid-19">SC Cases / Deaths</a>
           <br><div id='SCdataHeader'></div>
+      </span>
+      </div>
+      <div class="col-2">
+        <span><a href="">US Cases / Deaths</a>
+          <br><div id='USdataHeader'></div>
       </span>
       </div>
       <div class="col-4">
         <span><a href='https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19'>SC DHEC</a></span>
       </div>
   
+
 </nav>
 
 	<main role="main"
@@ -126,29 +132,48 @@
 	var jsonfile = "https://covidsc.com/data/covid_latest.json";
 	//var jsonfile = "data/covid_latest.json";
 	console.log('loading json file ' + jsonfile);
-  
+  function commas(num, decimalPlaces=0){
+    return num.toLocaleString(undefined, {maximumFractionDigits:decimalPlaces})
+
+  }
 	fetch(jsonfile)
 	.then(response => response.json())
 	.then(data => {
 	  console.log(data);
-	  //json = JSON.parse(data);
+    //json = JSON.parse(data);
+    var allDeaths = 0;
+    var allConfirmed = 0;
+    var lastDate = yesterday;
+
+  
 	  data.forEach((d) => {
-		if (d.Country == 'US' && d.State == 'South Carolina') {
-		  console.log(d);
-		  //document.getElementById("SCcases").innerHTML = d.Confirmed;
-		  //document.getElementById("SCdeaths").innerHTML = d.Deaths;
-		  let m = new Date(d.LastUpdate);
-		  m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
-		  console.log("Last update: " + m);
-		  //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
-		  let dateString = "<br><font size='-2'> as of "+(m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'est</font>';
-		  //document.getElementById("LastDataUpdate").innerHTML = m;
-		  document.getElementById('SCdataHeader').innerHTML = d.Confirmed + ' / ' + d.Deaths + dateString;
-		  }
-		}
-	  )
+      if (d.Country == 'US' && d.State == 'South Carolina') {
+        console.log(d);
+        //document.getElementById("SCcases").innerHTML = d.Confirmed;
+        //document.getElementById("SCdeaths").innerHTML = d.Deaths;
+        let m = new Date(d.LastUpdate);
+        m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
+        console.log("Last update: " + m);
+        //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
+        let dateString = "<br><font size='-2'> as of "+(m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</font>';
+        //document.getElementById("LastDataUpdate").innerHTML = m;
+        document.getElementById('SCdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + dateString;
+      }      
+      if (d.Country == 'US'){
+        allDeaths += d.Deaths;
+        allConfirmed += d.Confirmed;
+        let m = new Date(d.LastUpdate);
+        if (m > lastDate) { lastDate=m; }
+      }
+    })
+
+    var dateString = "<br><font size='-2'> as of "+(lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</font>'
+    document.getElementById('USdataHeader').innerHTML = commas(allConfirmed) + ' / ' + commas(allDeaths) + dateString;
+
+    console.log("Deaths: " + allDeaths + ", Confirmed: " + allConfirmed)
 	})
   
   </script>
+
 
 </html>
