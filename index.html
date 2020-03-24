@@ -44,20 +44,20 @@
 	<nav role="navigation"
      class="navbar">
       <div class="col-4">
-        <span><a href='#'><font size='+1'>Symptom Reporting</font></a></span>
+        <span><a href='https://covidnearyou.org' target='_covidnearyou'><font size='+1'>Symptom Reporting</font></a><br><font size='-1'>(via covidnearyou.org)</font></span>
       </div>
       <div class="col-2">
-        <span><a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19/monitoring-testing-covid-19">SC Cases / Deaths</a>
+        <span><a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19/monitoring-testing-covid-19" target="_new">SC Cases / Deaths</a>
           <br><div id='SCdataHeader'></div>
       </span>
       </div>
       <div class="col-2">
-        <span><a href="">US Cases / Deaths</a>
+        <span><a href="https://www.cdc.gov/coronavirus/2019-ncov/cases-updates/cases-in-us.html" target="_new">US Cases / Deaths</a>
           <br><div id='USdataHeader'></div>
       </span>
       </div>
       <div class="col-4">
-        <span><a href='https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19'>SC DHEC</a></span>
+        <span><a href='https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19' target="_new">SC DHEC</a></span>
       </div>
   
 
@@ -92,11 +92,11 @@
       <div class="col-2"><span>&nbsp;</span>
       </div>
       <div class="col-8">
-        <span>COVIDSC.com beta - Powered by <a href='https://hank.ai'>Hank.ai</a> and <a href="https://www.krum.io/">Krumware</a></span>
+        <span>Powered by <a href='https://hank.ai'>Hank.ai</a> and <a href="https://www.krum.io/">Krumware</a></span>
       </div>
-      <div class="col-2"><span>&nbsp;</span>
+      <div class="col-2"><span><font size='-2'>Version 0.02a</font></span>
       </div>
-    </div>  
+    </div>
   </div>
 </footer>
 
@@ -129,7 +129,7 @@
 	//var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
 	//var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
 	//var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
-	var jsonfile = "https://covidsc.com/data/covid_latest.json";
+	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=3";
 	//var jsonfile = "data/covid_latest.json";
 	console.log('loading json file ' + jsonfile);
   function commas(num, decimalPlaces=0){
