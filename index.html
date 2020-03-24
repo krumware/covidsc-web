@@ -129,7 +129,7 @@
 	//var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
 	//var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
 	//var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
-	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=3";
+	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=4";
 	//var jsonfile = "data/covid_latest.json";
 	console.log('loading json file ' + jsonfile);
   function commas(num, decimalPlaces=0){
@@ -149,7 +149,7 @@
 
   
 	  data.forEach((d) => {
-      if (d.Country == 'US' && d.State == 'South Carolina') {
+      if (d.Country == 'US' && d.State == 'South Carolina' && d.County == 'ALL') {
         console.log(d);
         //document.getElementById("SCcases").innerHTML = d.Confirmed;
         //document.getElementById("SCdeaths").innerHTML = d.Deaths;
@@ -163,21 +163,25 @@
         document.getElementById('SCdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
           commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
       }      
-      if (d.Country == 'US'){
+      if (d.Country == 'US' && d.State == 'ALL'){
+        let lastDate = new Date(d.LastUpdate)
+        var dateString = "<br><font size='-2'> as of "+(lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</font>'
+        document.getElementById('USdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
+              commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
+
+        console.log("Deaths: " + d.Deaths + ", Confirmed: " + d.Confirmed)
+/*    
         allDeaths += d.Deaths;
         allConfirmed += d.Confirmed;
         allDeathsChange += d.Deaths_Change;
         allConfirmedChange += d.Confirmed_Change;
         let m = new Date(d.LastUpdate);
         if (m > lastDate) { lastDate=m; }
+        */
       }
     })
 
-    var dateString = "<br><font size='-2'> as of "+(lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</font>'
-    document.getElementById('USdataHeader').innerHTML = commas(allConfirmed) + ' / ' + commas(allDeaths) + "<br><font size='-1'>+" + 
-          commas(allConfirmedChange) + " / +" + commas(allDeathsChange) + "</font>" + dateString;
 
-    console.log("Deaths: " + allDeaths + ", Confirmed: " + allConfirmed)
 	})
   
   </script>
