@@ -33,6 +33,17 @@
 
   <link rel="stylesheet"
         href="css/custom.css">
+
+      <style>
+      /* Always set the map height explicitly to define the size of the div
+            * element that contains the map. */
+      #map {
+            height: 400px;
+            width: 600px;
+            text-align: center;
+      }
+
+      </style>
 </head>
 
 <body>
@@ -67,7 +78,10 @@
       class="main container h-75 align-middle">
   <div class="row h-100">
     <div class="col-sm-12 my-auto">
+      <div id="map" class='mx-auto text-center align-middle'></div>
+
       <div class="mx-auto text-center align-middle">
+        <br><br>
         EMPLOYEE needing help?<br><a href='https://dew.sc.gov/covid-hub' target="_new">CLICK HERE</a><br><br>
 
         SMALL BUSINESS needing help?<br><a href='https://scsbdc.ecenterdirect.com/signup' target="_new">CLICK HERE</a><br><br><br><br>
@@ -129,7 +143,7 @@
 	//var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
 	//var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
 	//var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
-	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=4";
+	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=5";
 	//var jsonfile = "data/covid_latest.json";
 	console.log('loading json file ' + jsonfile);
   function commas(num, decimalPlaces=0){
@@ -147,8 +161,27 @@
     var allConfirmedChange = 0;
     var lastDate = yesterday;
 
-  
+    var confirmedCircles = {}
+    var deathCircles = {}
+
 	  data.forEach((d) => {
+      if (d.Country == 'US' && d.State == 'South Carolina' && d.County != 'ALL'){
+        if (d.Deaths_Change > 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
+        confirmedCircles[d.County] = {
+          center: {lat: d.Lat, lng: d.Long},
+          population: d.Confirmed * 500,
+          header: d.County + ', SC Confirmed Cases',
+          content: d.Confirmed + ' confirmed cases (+'+d.Confirmed_Change+' since yesterday)',
+          color: '#FF0000'
+        };
+        deathCircles[d.County] = {
+          center: {lat: d.Lat, lng: d.Long},
+          population: d.Deaths * 700,
+          header: d.County + ', SC Deaths',
+          content: d.Deaths + ' deaths (+'+d.Deaths_Change+' since yesterday)',
+          color: '#0000FF'
+        };
+      }
       if (d.Country == 'US' && d.State == 'South Carolina' && d.County == 'ALL') {
         console.log(d);
         //document.getElementById("SCcases").innerHTML = d.Confirmed;
@@ -180,10 +213,83 @@
         */
       }
     })
+    console.log(confirmedCircles);
+    console.log(deathCircles);
+    var map = initMap();
+    drawCircles(map, confirmedCircles);
+    drawCircles(map, deathCircles);
 
 
 	})
   
+  </script>
+  <script>
+    // This example creates circles on the map, representing populations in North
+    // America.
+    var infoWindow;
+
+    function drawCircles(map, spotmap){
+
+      // Construct the circle for each value in citymap.
+      // Note: We scale the area of the circle based on the population.
+      for (var spot in spotmap) {
+        // Add the circle for this city to the map.
+        var spotCircle = new google.maps.Circle({
+          strokeColor: spotmap[spot].color,
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: spotmap[spot].color,
+          fillOpacity: 0.35,
+          map: map,
+          center: spotmap[spot].center,
+          radius: Math.sqrt(spotmap[spot].population) * 100,
+          clickable: true
+        });
+        spotmap[spot].contentString = '<div id="content">'+
+          '<div id="covidDataInfo">'+
+          '</div>'+
+          '<h5 id="firstHeading" class="firstHeading">'+spotmap[spot].header+'</h5>'+
+          '<div id="bodyContent">'+spotmap[spot].content + 
+          '</div>'+
+          '</div>';
+        //create info window
+/*
+        google.maps.event.addListener(marker, 'mouseover', (function(marker) {  
+           return function() {  
+               var content = contentString;  
+               infoWindow.setContent(content);  
+               infoWindow.open(map, marker);  
+           }  
+         })(marker));  */
+
+         infoWindow = new google.maps.InfoWindow();
+         //console.log('Adding listener for ' + spotmap[spot].contentString);
+         //console.log(spotCircle.getCenter());
+         google.maps.event.addListener(spotCircle, 'click', (function(spotCircle, spot) {
+          return function() {
+              infoWindow.setContent(spotmap[spot].contentString);
+              infoWindow.setPosition(spotCircle.getCenter());
+              infoWindow.open(map);
+          }
+        })(spotCircle, spot));
+        
+      }
+    }
+
+
+    function initMap() {
+      // Create the map.
+      console.log('Drawing map ...')
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 7.1,
+        center: {lat: 33.7100, lng: -81.0348},
+        mapTypeId: 'terrain'
+      });
+      return map;
+    }
+  </script>
+  <script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBx6seaJUAP-r-6eePDE1IGQCXosHcQZbY&callback=initMap">
   </script>
 
 
