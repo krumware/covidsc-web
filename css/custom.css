@@ -13,12 +13,24 @@ a:hover {
 /**
 * LAYOUT
 **/
-html, body {
+html, body #wrap{
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   border: 0;
+}
+#wrap {
+  display: table;
+  width: 100%
+}
+.header, .stickyfooter, .content {
+  display: block;
+  width: 100%
+}
+
+.header, .stickyfooter {
+  height: 1px
 }
 
 /**
@@ -32,8 +44,8 @@ html, body {
 * SIZES
 **/
 :root {
-  --size-h-nav: 100px;
-  --size-h-footer: calc(var(--size-h-nav) * 1.2);
+  --size-h-nav: 120px;
+  --size-h-footer: calc(var(--size-h-nav) * 0.8);
 }
 
 /**
@@ -54,15 +66,24 @@ html, body {
   color: blue;
 }
 
+.main {
+  margin-top: var(--size-h-nav)+10;
+  margin-bottom: -50px;
+  min-height: 100%;
+}
 /**
 * FOOTER
 **/
 .footer {
   background-color: var(--color-bg-nav);
   bottom: 0;
-  height: var(--size-h-footer);
+  min-height: var(--size-h-footer);
   line-height: var(--size-h-footer); 
   color: #ffffff;
+}
+
+.footer-pad {
+  height: var(--size-h-footer) + 50;
 }
 /*
 .footer div {
