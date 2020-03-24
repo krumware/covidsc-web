@@ -201,7 +201,8 @@
         m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
         console.log("Last update: " + m);
         //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
-        let dateString = "<br><font size='-2'> as of "+(m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</font>';
+        let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json'>as of " + 
+          (m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</a></font>';
         //document.getElementById("LastDataUpdate").innerHTML = m;
         
         document.getElementById('SCdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
@@ -209,7 +210,8 @@
       }      
       if (d.Country == 'US' && d.State == 'ALL'){
         let lastDate = new Date(d.LastUpdate)
-        var dateString = "<br><font size='-2'> as of "+(lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</font>'
+        var dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json'>as of " + 
+          (lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</a></font>'
         document.getElementById('USdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
               commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
 
