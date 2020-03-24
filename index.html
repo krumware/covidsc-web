@@ -127,8 +127,11 @@
         crossorigin="anonymous"></script>
 
 </body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBx6seaJUAP-r-6eePDE1IGQCXosHcQZbY"></script>
 
 <script>
+  var confirmedCircles = {};
+  var deathCircles = {};
 	var today = new Date();
 	var yesterday = new Date();
 	yesterday.setDate(yesterday.getDate()-1);
@@ -150,6 +153,7 @@
     return num.toLocaleString(undefined, {maximumFractionDigits:decimalPlaces})
 
   }
+
 	fetch(jsonfile)
 	.then(response => response.json())
 	.then(data => {
@@ -161,8 +165,8 @@
     var allConfirmedChange = 0;
     var lastDate = yesterday;
 
-    var confirmedCircles = {}
-    var deathCircles = {}
+    //var confirmedCircles = {}
+    //var deathCircles = {}
 
 	  data.forEach((d) => {
       if (d.Country == 'US' && d.State == 'South Carolina' && d.County != 'ALL'){
@@ -218,7 +222,7 @@
     var map = initMap();
     drawCircles(map, confirmedCircles);
     drawCircles(map, deathCircles);
-
+  
 
 	})
   
@@ -285,12 +289,16 @@
         center: {lat: 33.7100, lng: -81.0348},
         mapTypeId: 'terrain'
       });
+      //var map = initMap();
+      //drawCircles(map, confirmedCircles);
+      //drawCircles(map, deathCircles);
       return map;
     }
   </script>
+  <!--
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBx6seaJUAP-r-6eePDE1IGQCXosHcQZbY&callback=initMap">
   </script>
-
+-->
 
 </html>
