@@ -148,7 +148,7 @@
 	//var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
 	//var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
 	//var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
-	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=5";
+	var jsonfile = "https://covidsc.com/data/covid_latest.json?v=6";
 	//var jsonfile = "data/covid_latest.json";
 	console.log('loading json file ' + jsonfile);
   function commas(num, decimalPlaces=0){
@@ -172,8 +172,8 @@
 
 	  data.forEach((d) => {
       d.LastUpdate = d.LastUpdate.replace(' ', 'T');
-      if (d.Country == 'US' && d.State == 'South Carolina' && d.County != 'ALL'){
-        if (d.Deaths_Change > 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
+      if (d.Country == 'USA' && d.State == 'SC' && d.County != 'ALL'){
+        if (d.Deaths_Change != 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
         if (d.Confirmed > 0){
           confirmedCircles[d.County] = {
             center: {lat: d.Lat, lng: d.Long},
@@ -193,26 +193,31 @@
           };
         }
       }
-      if (d.Country == 'US' && d.State == 'South Carolina' && d.County == 'ALL') {
+      if (d.Country == 'USA' && d.State == 'SC' && d.County == 'ALL') {
         console.log(d);
         //document.getElementById("SCcases").innerHTML = d.Confirmed;
         //document.getElementById("SCdeaths").innerHTML = d.Deaths;
         let m = new Date(d.LastUpdate);
-        m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
+        //m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
         console.log("Last update: " + m);
         //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
-        let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json'>as of " + 
-          (m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</a></font>';
+        let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " + 
+          (m.getMonth()+1) + '/' + m.getDate() +'</a></font>';
+        //  (m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</a></font>';
         //document.getElementById("LastDataUpdate").innerHTML = m;
         
         document.getElementById('SCdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
           commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
       }      
-      if (d.Country == 'US' && d.State == 'ALL'){
+      if (d.Country == 'USA' && d.State == 'ALL'){
         let lastDate = new Date(d.LastUpdate)
-        var dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json'>as of " + 
+        let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " + 
+          (lastDate.getMonth()+1) + '/' + lastDate.getDate() +'</a></font>';
+        /*
+        var dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " + 
           (lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</a></font>'
-        document.getElementById('USdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
+        */
+       document.getElementById('USdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" + 
               commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
 
         console.log("Deaths: " + d.Deaths + ", Confirmed: " + d.Confirmed)
