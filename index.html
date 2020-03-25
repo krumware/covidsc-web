@@ -134,6 +134,7 @@
 <script>
   var confirmedCircles = {};
   var deathCircles = {};
+  var symptomCircles = {};
 	var today = new Date();
 	var yesterday = new Date();
 	yesterday.setDate(yesterday.getDate()-1);
@@ -156,6 +157,7 @@
 
   }
 
+
 	fetch(jsonfile)
 	.then(response => response.json())
 	.then(data => {
@@ -167,6 +169,7 @@
     var allConfirmedChange = 0;
     var lastDate = yesterday;
 
+    var strokeOpacity = 0.8;
     //var confirmedCircles = {}
     //var deathCircles = {}
 
@@ -180,7 +183,8 @@
             population: d.Confirmed * 500,
             header: d.County + ', SC Confirmed Cases',
             content: d.Confirmed + ' confirmed cases (+'+d.Confirmed_Change+' since yesterday)',
-            color: '#FF0000'
+            color: '#FF0000',
+            strokeOpacity: strokeOpacity
           };
         }
         if (d.Deaths>0) {
@@ -189,7 +193,8 @@
             population: d.Deaths * 700,
             header: d.County + ', SC Deaths',
             content: d.Deaths + ' deaths (+'+d.Deaths_Change+' since yesterday)',
-            color: '#0000FF'
+            color: '#0000FF',
+            strokeOpacity: strokeOpacity
           };
         }
       }
@@ -236,7 +241,27 @@
     var map = initMap();
     drawCircles(map, confirmedCircles);
     drawCircles(map, deathCircles);
-  
+    var cnyjson = "https://api.covidnearyou.org/markers/";
+    fetch(cnyjson)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      let color = "#FF8000";
+      data.forEach((d) => {
+        if (d.state=="SC"){
+          symptomCircles[d.city] = {
+            center: {lat: d.lat, lng: d.long},
+            population: d.symptoms * 1000,
+            header: d.city + ', SC Symptoms Reported',
+            content: d.symptoms + ' COVID+ symptoms reported',
+            color: color,
+            strokeOpacity: 0.1,
+            fillOpacity: 0.7
+          };
+        }
+      })
+      drawCircles(map, symptomCircles);
+    }) 
 
 	})
   
@@ -252,12 +277,16 @@
       // Note: We scale the area of the circle based on the population.
       for (var spot in spotmap) {
         // Add the circle for this city to the map.
+        //console.log('drawing circle @ ', spotmap[spot].center);
+        spotmap[spot].center = {'lat': parseFloat(spotmap[spot].center['lat']), 'lng': parseFloat(spotmap[spot].center['lng'])};
+        //console.log('drawing circle @ ', spotmap[spot].center);
+        if (!spotmap[spot].hasOwnProperty('fillOpacity')){ spotmap[spot]['fillOpacity'] = 0.35; }
         var spotCircle = new google.maps.Circle({
           strokeColor: spotmap[spot].color,
-          strokeOpacity: 0.8,
-          strokeWeight: 2,
+          strokeOpacity: spotmap[spot].strokeOpacity,
+          strokeWeight: 0,
           fillColor: spotmap[spot].color,
-          fillOpacity: 0.35,
+          fillOpacity: spotmap[spot].fillOpacity,
           map: map,
           center: spotmap[spot].center,
           radius: Math.sqrt(spotmap[spot].population) * 100,
