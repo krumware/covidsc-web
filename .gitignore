@@ -1,4 +1,3 @@
-
-jekyll_build_watch.bat
-feed.xml
-_site/
+_site
+.sass-cache
+.jekyll-metadata
