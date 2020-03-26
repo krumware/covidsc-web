@@ -203,7 +203,7 @@
         //document.getElementById("SCcases").innerHTML = d.Confirmed;
         //document.getElementById("SCdeaths").innerHTML = d.Deaths;
         let m = new Date(d.LastUpdate);
-        //m.setTime(m.getTime()+(-300*60*1000)); //hard convert to eastern time
+        m.setTime(m.getTime()+(+300*60*1000)); //hard convert time forward to fix ios error with eastern time
         console.log("Last update: " + m);
         //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
         let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " + 
@@ -216,6 +216,8 @@
       }      
       if (d.Country == 'USA' && d.State == 'ALL'){
         let lastDate = new Date(d.LastUpdate)
+        lastDate.setTime(lastDate.getTime()+(+300*60*1000)); //hard convert time forward to fix ios error with eastern time
+
         let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " + 
           (lastDate.getMonth()+1) + '/' + lastDate.getDate() +'</a></font>';
         /*
