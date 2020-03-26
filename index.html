@@ -80,6 +80,7 @@
       <div id="map" class='mx-auto text-center align-middle'></div>
 
       <div class="mx-auto text-center align-middle">
+        <div id='hotspots'></div>
         <br><br>
         EMPLOYEE needing help?<br><a href='https://dew.sc.gov/covid-hub' target="_new">CLICK HERE</a><br><br>
 
@@ -172,10 +173,12 @@
     var strokeOpacity = 0.8;
     //var confirmedCircles = {}
     //var deathCircles = {}
+    var HotCounties = new Array();
 
 	  data.forEach((d) => {
       d.LastUpdate = d.LastUpdate.replace(' ', 'T');
       if (d.Country == 'USA' && d.State == 'SC' && d.County != 'ALL'){
+        HotCounties.push({County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF});
         if (d.Deaths_Change != 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
         if (d.Confirmed > 0){
           confirmedCircles[d.County] = {
@@ -198,6 +201,7 @@
           };
         }
       }
+      
       if (d.Country == 'USA' && d.State == 'SC' && d.County == 'ALL') {
         console.log(d);
         //document.getElementById("SCcases").innerHTML = d.Confirmed;
@@ -238,6 +242,21 @@
         */
       }
     })
+
+    HotCounties = HotCounties.sort(function(a,b) { return b.Confirmed_POPADJ_GF - a.Confirmed_POPADJ_GF; }); //sort descending
+    HC_string = ""
+    for (var i=0; i<HotCounties.length; i++){
+      var c = HotCounties[i];
+      if (c.Confirmed_POPADJ_GF > 10){
+        console.log(c.County + ': ' + c.Confirmed_POPADJ_GF);
+        HC_string += "<tr><td>" + c.County + ' County: </td><td>' + c.Confirmed_POPADJ_GF.toFixed(2) + '</td></tr>';
+      }
+    }
+    HC_string = "<b>Population Adjusted Confirmed Case Growth Rate ...</b><br><table align='center'>" + HC_string + '</table><br>';
+    console.log('Hot County string: ' + HC_string)
+    document.getElementById('hotspots').innerHTML = HC_string;
+
+    console.log(HotCounties);
     console.log(confirmedCircles);
     console.log(deathCircles);
     var map = initMap();
