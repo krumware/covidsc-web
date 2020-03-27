@@ -133,6 +133,7 @@
 <script src="script/google_maps.js"></script>
 
 <script>
+  var statesToInclude = ['SC', 'NC', 'GA']; //we'll include the cases, deaths, and symptoms for these states
   var confirmedCircles = {};
   var deathCircles = {};
   var symptomCircles = {};
@@ -177,14 +178,14 @@
 
 	  data.forEach((d) => {
       d.LastUpdate = d.LastUpdate.replace(' ', 'T');
-      if (d.Country == 'USA' && d.State == 'SC' && d.County != 'ALL'){
-        HotCounties.push({County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF});
+      if (d.Country == 'USA' && statesToInclude.includes(d.State) && d.County != 'ALL'){
+        HotCounties.push({State: d.State, County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF});
         if (d.Deaths_Change != 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
         if (d.Confirmed > 0){
           confirmedCircles[d.County] = {
             center: {lat: d.Lat, lng: d.Long},
             population: d.Confirmed * 500,
-            header: d.County + ', SC Confirmed Cases',
+            header: d.County + ', ' + d.State + ' Confirmed Cases',
             content: d.Confirmed + ' confirmed cases (+'+d.Confirmed_Change+' since yesterday)',
             color: '#FF0000',
             strokeOpacity: strokeOpacity
@@ -249,7 +250,7 @@
       var c = HotCounties[i];
       if (c.Confirmed_POPADJ_GF > 10){
         console.log(c.County + ': ' + c.Confirmed_POPADJ_GF);
-        HC_string += "<tr><td>" + c.County + ' County: </td><td>' + c.Confirmed_POPADJ_GF.toFixed(2) + '</td></tr>';
+        HC_string += "<tr><td>" + c.County + ' County, ' + c.State + ': </td><td>' + c.Confirmed_POPADJ_GF.toFixed(2) + '</td></tr>';
       }
     }
     HC_string = "<b>Population Adjusted Confirmed Case Growth Rate ...</b><br><table align='center'>" + HC_string + '</table><br>';
@@ -269,11 +270,11 @@
       console.log(data);
       let color = "#FF8000";
       data.forEach((d) => {
-        if (d.state=="SC"){
+        if (statesToInclude.includes(d.state)){
           symptomCircles[d.city] = {
             center: {lat: d.lat, lng: d.long},
             population: d.symptoms * 1000,
-            header: d.city + ', SC Symptoms Reported',
+            header: d.city + ', ' + d.state + ' Symptoms Reported',
             content: d.symptoms + ' COVID+ symptoms reported',
             color: color,
             strokeOpacity: 0.1,
