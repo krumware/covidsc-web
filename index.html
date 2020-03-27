@@ -179,7 +179,7 @@
 	  data.forEach((d) => {
       d.LastUpdate = d.LastUpdate.replace(' ', 'T');
       if (d.Country == 'USA' && statesToInclude.includes(d.State) && d.County != 'ALL'){
-        HotCounties.push({State: d.State, County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF});
+        HotCounties.push({State: d.State, County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF, Confirmed_POPADJ_GF_Change: d.Confirmed_POPADJ_GF_Change});
         if (d.Deaths_Change != 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
         if (d.Confirmed > 0){
           confirmedCircles[d.County] = {
@@ -250,7 +250,10 @@
       var c = HotCounties[i];
       if (c.Confirmed_POPADJ_GF > 10){
         console.log(c.County + ': ' + c.Confirmed_POPADJ_GF);
-        HC_string += "<tr><td>" + c.County + ' County, ' + c.State + ': </td><td>' + c.Confirmed_POPADJ_GF.toFixed(2) + '</td></tr>';
+        HC_string += "<tr><td align='left'>" + c.County + ' County, ' + c.State + ": </td><td align='left'>" + c.Confirmed_POPADJ_GF.toFixed(2) + " <font size='-1'>(";
+        if (c.Confirmed_POPADJ_GF_Change>=0){ HC_string += "+" + c.Confirmed_POPADJ_GF_Change.toFixed(2); }
+        else {HC_string += c.Confirmed_POPADJ_GF_Change.toFixed(2); }
+        HC_string += ")</font></td></tr>";
       }
     }
     HC_string = "<b>Population Adjusted Confirmed Case Growth Rate ...</b><br><table align='center'>" + HC_string + '</table><br>';
