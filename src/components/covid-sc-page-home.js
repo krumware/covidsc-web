@@ -162,24 +162,39 @@ export class CovidScPageHome extends LitElement {
           Confirmed Cases/Deaths
         </div>
         <div class="layout horizontal center-justified wrap">
-          <covid-sc-data-card title="SC Cases" value="456" delta="+32"></covid-sc-data-card>
-          <covid-sc-data-card title="SC Deaths" value="9" delta="+2"></covid-sc-data-card>
-          <covid-sc-data-card title="USA Cases" value="83,836" delta="+18,058"></covid-sc-data-card>
-          <covid-sc-data-card title="USA Deaths" value="1,209" delta="+267"></covid-sc-data-card>
+          <covid-sc-data-card title="SC Cases"
+            value="${(this.counts && this.counts.state && this.counts.state.confirmed) ? this.counts.state.confirmed : ''}"
+            delta="${(this.counts && this.counts.state && this.counts.state.confirmedChanged) ? this.counts.state.confirmedChanged : ''}"
+          ></covid-sc-data-card>
+          <covid-sc-data-card title="SC Deaths"
+            value="${(this.counts && this.counts.state && this.counts.state.deaths) ? this.counts.state.deaths : ''}"
+            delta="${(this.counts && this.counts.state && this.counts.state.deathsChanged) ? this.counts.state.deathsChanged : ''}"
+          ></covid-sc-data-card>
+          <covid-sc-data-card title="USA Cases"
+            value="${(this.counts && this.counts.national && this.counts.national.confirmed) ? this.counts.national.confirmed : ''}"
+            delta="${(this.counts && this.counts.national && this.counts.national.confirmedChanged) ? this.counts.national.confirmedChanged : ''}"
+          ></covid-sc-data-card>
+          <covid-sc-data-card title="USA Deaths"
+            value="${(this.counts && this.counts.national && this.counts.national.deaths) ? this.counts.national.deaths : ''}"
+            delta="${(this.counts && this.counts.national && this.counts.national.deathsChanged) ? this.counts.national.deathsChanged : ''}"
+          ></covid-sc-data-card>
           <!-- <covid-sc-data-card ghost></covid-sc-data-card>
           <covid-sc-data-card ghost></covid-sc-data-card>
           <covid-sc-data-card ghost></covid-sc-data-card>
           <covid-sc-data-card ghost></covid-sc-data-card> -->
         </div>
         <div class="module-footer">
-          Updated 03/27/2020
+          ${(this.counts && this.counts.national && this.counts.national.lastUpdate) ? `Updated ${this.counts.national.lastUpdate}` : ""}
         </div>
       </div>
       <div class="layout vertical module-container">
         <div class="module-title">
           Confirmed Cases/Deaths By Region
         </div>
-        <covid-sc-map class="module-content" style="height:400px; box-sizing:border-box; width: calc(100%-8px);"></covid-sc-map>
+        <covid-sc-map .map="${this.map}" class="module-content" style="height:400px; box-sizing:border-box; width: calc(100%-8px);"></covid-sc-map>
+        <div class="module-footer">
+          ${(this.counts && this.counts.national && this.counts.national.lastUpdate) ? `Updated ${this.counts.national.lastUpdate}` : ""}
+        </div>
       </div>
       <div class="layout vertical module-container">
         <div class="module-title">
@@ -205,6 +220,9 @@ export class CovidScPageHome extends LitElement {
             `
           )}
         </div>
+        <div class="module-footer">
+          ${(this.counts && this.counts.national && this.counts.national.lastUpdate) ? `Updated ${this.counts.national.lastUpdate}` : ""}
+        </div>
       </div>
 
 
@@ -213,6 +231,7 @@ export class CovidScPageHome extends LitElement {
 
   firstUpdated() {
     this.getData();
+    this.counts = {};
   }
 
   getData() {
@@ -286,48 +305,23 @@ export class CovidScPageHome extends LitElement {
           // }
         }
 
-        // this looks like the header counts for state
-        // if (d.Country == 'USA' && d.State == 'SC' && d.County == 'ALL') {
-        //   console.log(d);
-        //   //document.getElementById("SCcases").innerHTML = d.Confirmed;
-        //   //document.getElementById("SCdeaths").innerHTML = d.Deaths;
-        //   let m = new Date(d.LastUpdate);
-        //   //m.setTime(m.getTime()+(+300*60*1000)); //hard convert time forward to fix ios error with eastern time
-        //   console.log("Last update: " + m);
-        //   //let dateString = $.format.date(m, "MMMM d, yyyy @ HH:mm") + " Eastern";
-        //   let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " +
-        //     (m.getMonth()+1) + '/' + m.getDate() +'</a></font>';
-        //   //  (m.getMonth()+1)+'/'+m.getDate()+' @ '+m.getHours()+":"+m.getMinutes()+'</a></font>';
-        //   //document.getElementById("LastDataUpdate").innerHTML = m;
-
-        //   document.getElementById('SCdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" +
-        //     commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
-        // }
+        // calculate state counts
+        if (d.Country == 'USA' && d.State == 'SC' && d.County == 'ALL') {
+          this.counts.state = { "confirmed" : commas(d.Confirmed), "deaths" : commas(d.Deaths), "confirmedChanged" : commas(d.Confirmed_Change), "deathsChanged" : commas(d.Deaths_Change)};
+          if(d.Confirmed_Change > 0) this.counts.state.confirmedChanged = `+${this.counts.state.confirmedChanged }`;
+          if(d.Deaths_Change > 0) this.counts.state.deathsChanged = `+${this.counts.state.deathsChanged }`;
+          this.counts.state.lastUpdate = new Date(d.LastUpdate).toLocaleDateString();
+          console.log("State Counts", this.counts.state);
+        }
 
         // this looks like the header counts for USA
-  //       if (d.Country == 'USA' && d.State == 'ALL'){
-  //         let lastDate = new Date(d.LastUpdate)
-  //         //lastDate.setTime(lastDate.getTime()+(+300*60*1000)); //hard convert time forward to fix ios error with eastern time
-
-  //         let dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " +
-  //           (lastDate.getMonth()+1) + '/' + lastDate.getDate() +'</a></font>';
-  //         /*
-  //         var dateString = "<br><font size='-2'><a href='https://github.com/jackneil/covidsc-web/blob/master/data/covid_latest.json' target='_new'>as of " +
-  //           (lastDate.getMonth()+1)+'/'+lastDate.getDate()+' @ '+lastDate.getHours()+":"+lastDate.getMinutes()+'</a></font>'
-  //         */
-  //       document.getElementById('USdataHeader').innerHTML = commas(d.Confirmed) + ' / ' + commas(d.Deaths) + "<br><font size='-1'>+" +
-  //               commas(d.Confirmed_Change) + " / +" + commas(d.Deaths_Change) + "</font>" + dateString;
-
-  //         console.log("Deaths: " + d.Deaths + ", Confirmed: " + d.Confirmed)
-  // /*
-  //         allDeaths += d.Deaths;
-  //         allConfirmed += d.Confirmed;
-  //         allDeathsChange += d.Deaths_Change;
-  //         allConfirmedChange += d.Confirmed_Change;
-  //         let m = new Date(d.LastUpdate);
-  //         if (m > lastDate) { lastDate=m; }
-  //         */
-  //       }
+        if (d.Country == 'USA' && d.State == 'ALL'){
+          this.counts.national = { "confirmed" : commas(d.Confirmed), "deaths" : commas(d.Deaths), "confirmedChanged" : commas(d.Confirmed_Change), "deathsChanged" : commas(d.Deaths_Change)};
+          if(d.Confirmed_Change > 0) this.counts.national.confirmedChanged = `+${this.counts.national.confirmedChanged }`;
+          if(d.Deaths_Change > 0) this.counts.national.deathsChanged = `+${this.counts.national.deathsChanged }`;
+          this.counts.national.lastUpdate = new Date(d.LastUpdate).toLocaleDateString();
+          console.log("National Counts", this.counts.national);
+        }
 
       });
       HotCounties = HotCounties.sort(function(a,b) { return b.Confirmed_POPADJ_GF - a.Confirmed_POPADJ_GF; }); //sort descending

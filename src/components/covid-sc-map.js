@@ -12,7 +12,7 @@ export class CovidScMap extends LitElement {
 
   static get properties() {
     return {
-
+      map: { type: Object, reflect: true },
     };
   }
 
@@ -33,26 +33,26 @@ export class CovidScMap extends LitElement {
 
   firstUpdated() {
 
-    this.initMap();
+    this.loadMap();
   }
 
-  initMap() {
+  loadMap() {
     if (typeof window.google === 'undefined') {
       const script = document.createElement('script');
       // <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBx6seaJUAP-r-6eePDE1IGQCXosHcQZbY"></script>\
       const apiKey = "AIzaSyBx6seaJUAP-r-6eePDE1IGQCXosHcQZbY";
       script.src = `//maps.googleapis.com/maps/api/js?key=${apiKey}`;
       // script.async = true;
-      script.onload = this.otherStuff.bind(this);
+      script.onload = this.initMap.bind(this);
       document.body.append(script);
 
     } else {
-      this.otherStuff();
+      this.initMap();
     }
     // Create the map.
   }
 
-  otherStuff() {
+  initMap() {
 
     var map = new window.google.maps.Map(this.shadowRoot.getElementById("map"), {
       zoom: 7.1,
@@ -61,8 +61,9 @@ export class CovidScMap extends LitElement {
     });
     //var map = initMap();
     //drawCircles(map, confirmedCircles);
-    //drawCircles(map, deathCircles);
-    return map;
+    //drawCircles(map, deathCircles);\
+
+    // this.map = map;
   }
 }
 
