@@ -1,0 +1,107 @@
+{
+  "name" : "COVID SC",
+  "short_name" : "COVID SC",
+  "description" : "Information and resources about COVID for the State of South Carolina",
+  "start_url" : "index.html",
+  "display" : "standalone",
+  "orientation" : "portrait",
+  "lang" : "English",
+  "background_color" : "#000080",
+  "icons": [
+    {
+        "src": "/src/images/24198ae8-b100-43d4-1a17-57f56212890b.webPlatform.png",
+        "sizes": "44x44",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/da1aff98-4cd6-6c77-7183-e3c870fe1939.webPlatform.png",
+        "sizes": "48x48",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/e2ed94e1-cee1-32ed-6cc6-3965962a64be.webPlatform.png",
+        "sizes": "1240x600",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/44af5248-52aa-210b-7f8a-8b149edded06.webPlatform.png",
+        "sizes": "300x300",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/de859fd6-bd36-4499-04fa-59844097e439.webPlatform.png",
+        "sizes": "150x150",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/0f886729-a8e5-91fc-1ece-f61adee6490d.webPlatform.png",
+        "sizes": "88x88",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/26e2c5c7-29e7-dac9-104b-5fc0d761e79c.webPlatform.png",
+        "sizes": "24x24",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/f509a1f1-5e53-1e78-62be-f94678038416.webPlatform.png",
+        "sizes": "50x50",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/ab15fba1-33dd-637a-6901-830467472899.webPlatform.png",
+        "sizes": "620x300",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/d3e81110-a1e7-b3a3-be08-ff1b3fb6ed0a.webPlatform.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/428862b8-f40c-6da4-a2ce-6866ecf5f868.webPlatform.png",
+        "sizes": "144x144",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/37a92a2e-a31a-e2b2-8697-1b456f089025.webPlatform.png",
+        "sizes": "96x96",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/a60f63b4-4ed6-1042-f553-4322a5a41e68.webPlatform.png",
+        "sizes": "72x72",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/76615ab2-ff23-c3fa-c76d-ccdfa02681c7.webPlatform.png",
+        "sizes": "36x36",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/9f8ef1f5-addd-e193-e789-55eeb0bd2f65.webPlatform.png",
+        "sizes": "1024x1024",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/3a4ef4f0-e447-e628-2a39-b5b6c0467757.webPlatform.png",
+        "sizes": "180x180",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/a7598270-f96d-5e20-490f-62fb8575873a.webPlatform.png",
+        "sizes": "152x152",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/f2ba1612-a4a7-fe81-213e-1a8edb1d1753.webPlatform.png",
+        "sizes": "120x120",
+        "type": "image/png"
+    },
+    {
+        "src": "/src/images/9a56d404-0806-f5d8-6d4c-0f7c96ea4a4f.webPlatform.png",
+        "sizes": "76x76",
+        "type": "image/png"
+    }
+  ]
+}

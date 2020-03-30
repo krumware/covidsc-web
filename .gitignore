@@ -1,4 +1,20 @@
+## editors
+/.idea
+/.vscode
 
-jekyll_build_watch.bat
-feed.xml
-_site/
+## system files
+.DS_Store
+
+## npm
+/node_modules/
+/npm-debug.log
+
+## testing
+/coverage/
+
+## temp folders
+/.tmp/
+
+# build
+/_site/
+/dist/
