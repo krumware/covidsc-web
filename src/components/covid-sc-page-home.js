@@ -14,6 +14,8 @@ export class CovidScPageHome extends LitElement {
     super();
     // redundant placeholder
     this.countyList = [];
+    this.map = {};
+    this.hotspots = {};
   }
 
   static get properties() {
@@ -40,16 +42,6 @@ export class CovidScPageHome extends LitElement {
           margin-left: 5px;
         }
 
-        .action-button {
-          width: 200px;
-        }
-
-        .action-button {
-          margin: 8px;
-          min-width: 288px;
-          flex-grow: 1;
-          /* height: 48px; */ /* CANT CHANGE HEIGHT YET https://github.com/material-components/material-components-web-components/issues/81 */
-        }
 
         .module-container {
           font-family: Roboto;
@@ -85,6 +77,29 @@ export class CovidScPageHome extends LitElement {
           margin: 0px 8px 4px 8px;
         }
 
+        .action-button {
+          /* width: 200px; */
+        }
+
+        .action-button {
+          margin: 8px;
+          width: 100%;
+          min-width: 288px;
+          /* flex-grow: 1; */
+          /* height: 48px; */ /* CANT CHANGE HEIGHT YET https://github.com/material-components/material-components-web-components/issues/81 */
+        }
+
+        .min-margin > covid-sc-data-card:nth-of-type(1) {
+          margin-right: 8px;
+        }
+        .min-margin > covid-sc-data-card:nth-of-type(2) {
+          margin-left: 8px;
+        }
+
+        .min-margin {
+          min-width: 288px;
+        }
+
         covid-sc-data-card {
           min-width: 136px;
           max-width: 188px;
@@ -97,6 +112,7 @@ export class CovidScPageHome extends LitElement {
           height: 0px;
           flex-grow: 1;
         }
+
         .buttonlink {
           text-decoration: none;
         }
@@ -137,6 +153,50 @@ export class CovidScPageHome extends LitElement {
         .data-table > div:nth-of-type(odd){
           background-color: #f0f0f0;
         }
+
+        .footer {
+          width: 100%;
+          height: 41px;
+          background-color: #393939;
+          font-family: Roboto;
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          text-align: center;
+          color: #d8d8d8;
+        }
+        .footer > div > a {
+          color: #ffffff;
+        }
+
+        @media only screen and (min-width : 628px) {
+          .action-button {
+            /* width: 200px; */
+          }
+
+          .action-button {
+            margin: 8px;
+            min-width: 288px;
+            flex-grow: 1;
+            /* height: 48px; */ /* CANT CHANGE HEIGHT YET https://github.com/material-components/material-components-web-components/issues/81 */
+          }
+
+          covid-sc-data-card {
+            min-width: 136px;
+            max-width: 188px;
+            height: 94px;
+            flex-grow: 1;
+          }
+
+          covid-sc-data-card[ghost] {
+            max-width: 188px;
+            height: 0px;
+            flex-grow: 1;
+          }
+        }
       `
     ];
   }
@@ -148,13 +208,13 @@ export class CovidScPageHome extends LitElement {
         <div class="module-title">
           Get Help
         </div>
-        <div class="layout horizontal wrap center-justified">
+        <div class="layout horizontal center-justified wrap">
           <!--
             <a href="/symptoms" class="buttonlink"><mwc-button alt="Get help" unelevated class="action-button" label="CHECK SYMPTOMS"></mwc-button></a>
             <a href="/resources" class="buttonlink"><mwc-button alt="Get help" unelevated class="action-button" label="FIND RESOURCES"></mwc-button></a>
           -->
-          <a href="https://covidnearyou.org/" target="_blank" class="buttonlink"><mwc-button alt="Get help" unelevated class="action-button" label="CHECK SYMPTOMS"></mwc-button></a>
-          <a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19" target="_blank" class="buttonlink"><mwc-button alt="Get help" unelevated class="action-button" label="FIND RESOURCES"></mwc-button></a>
+          <a href="https://covidnearyou.org/" target="_blank" class="layout flex action-button buttonlink"><mwc-button alt="Get help" unelevated label="CHECK SYMPTOMS" style="width: inherit;"></mwc-button></a>
+          <a href="https://www.scdhec.gov/infectious-diseases/viruses/coronavirus-disease-2019-covid-19" target="_blank" class="layout flex action-button buttonlink"><mwc-button alt="Get help" unelevated label="FIND RESOURCES" style="width: inherit;"></mwc-button></a>
         </div>
       </div>
       <div class="layout vertical module-container">
@@ -162,22 +222,26 @@ export class CovidScPageHome extends LitElement {
           Confirmed Cases/Deaths
         </div>
         <div class="layout horizontal center-justified wrap">
-          <covid-sc-data-card title="SC Cases"
-            value="${(this.counts && this.counts.state && this.counts.state.confirmed) ? this.counts.state.confirmed : ''}"
-            delta="${(this.counts && this.counts.state && this.counts.state.confirmedChanged) ? this.counts.state.confirmedChanged : ''}"
-          ></covid-sc-data-card>
-          <covid-sc-data-card title="SC Deaths"
-            value="${(this.counts && this.counts.state && this.counts.state.deaths) ? this.counts.state.deaths : ''}"
-            delta="${(this.counts && this.counts.state && this.counts.state.deathsChanged) ? this.counts.state.deathsChanged : ''}"
-          ></covid-sc-data-card>
-          <covid-sc-data-card title="USA Cases"
-            value="${(this.counts && this.counts.national && this.counts.national.confirmed) ? this.counts.national.confirmed : ''}"
-            delta="${(this.counts && this.counts.national && this.counts.national.confirmedChanged) ? this.counts.national.confirmedChanged : ''}"
-          ></covid-sc-data-card>
-          <covid-sc-data-card title="USA Deaths"
-            value="${(this.counts && this.counts.national && this.counts.national.deaths) ? this.counts.national.deaths : ''}"
-            delta="${(this.counts && this.counts.national && this.counts.national.deathsChanged) ? this.counts.national.deathsChanged : ''}"
-          ></covid-sc-data-card>
+          <div class="layout horizontal flex action-button min-margin" style="max-width:392px;">
+            <covid-sc-data-card title="SC Cases"
+              value="${(this.counts && this.counts.state && this.counts.state.confirmed) ? this.counts.state.confirmed : ''}"
+              delta="${(this.counts && this.counts.state && this.counts.state.confirmedChanged) ? this.counts.state.confirmedChanged : ''}"
+            ></covid-sc-data-card>
+            <covid-sc-data-card title="SC Deaths"
+              value="${(this.counts && this.counts.state && this.counts.state.deaths) ? this.counts.state.deaths : ''}"
+              delta="${(this.counts && this.counts.state && this.counts.state.deathsChanged) ? this.counts.state.deathsChanged : ''}"
+            ></covid-sc-data-card>
+          </div>
+          <div class="layout horizontal flex action-button min-margin" style="max-width:392px;">
+            <covid-sc-data-card title="USA Cases"
+              value="${(this.counts && this.counts.national && this.counts.national.confirmed) ? this.counts.national.confirmed : ''}"
+              delta="${(this.counts && this.counts.national && this.counts.national.confirmedChanged) ? this.counts.national.confirmedChanged : ''}"
+            ></covid-sc-data-card>
+            <covid-sc-data-card title="USA Deaths"
+              value="${(this.counts && this.counts.national && this.counts.national.deaths) ? this.counts.national.deaths : ''}"
+              delta="${(this.counts && this.counts.national && this.counts.national.deathsChanged) ? this.counts.national.deathsChanged : ''}"
+            ></covid-sc-data-card>
+          </div>
           <!-- <covid-sc-data-card ghost></covid-sc-data-card>
           <covid-sc-data-card ghost></covid-sc-data-card>
           <covid-sc-data-card ghost></covid-sc-data-card>
@@ -191,7 +255,7 @@ export class CovidScPageHome extends LitElement {
         <div class="module-title">
           Confirmed Cases/Deaths By Region
         </div>
-        <covid-sc-map .map="${this.map}" class="module-content" style="height:400px; box-sizing:border-box; width: calc(100%-8px);"></covid-sc-map>
+        <covid-sc-map .map="${this.map}" .hotspots="${this.hotspots}" class="module-content" style="height:400px; box-sizing:border-box; width: calc(100%-8px);"></covid-sc-map>
         <div class="module-footer">
           ${(this.counts && this.counts.national && this.counts.national.lastUpdate) ? `Updated ${this.counts.national.lastUpdate}` : ""}
         </div>
@@ -224,6 +288,11 @@ export class CovidScPageHome extends LitElement {
           ${(this.counts && this.counts.national && this.counts.national.lastUpdate) ? `Updated ${this.counts.national.lastUpdate}` : ""}
         </div>
       </div>
+      <div class="footer layout vertical center-justified">
+        <div>
+          Powered by <a href="https://www.hank.ai/" class="buttonlink">Hank.ai</a> and <a href="https://www.krum.io/" class="buttonlink">Krumware</a>
+        </div>
+      </div>
 
 
     `;
@@ -235,27 +304,20 @@ export class CovidScPageHome extends LitElement {
   }
 
   getData() {
-    var statesToInclude = ['SC', 'NC', 'GA']; //we'll include the cases, deaths, and symptoms for these states
-    var confirmedCircles = {};
-    var deathCircles = {};
-    var symptomCircles = {};
-    var today = new Date();
-    var yesterday = new Date();
+    const statesToInclude = ['SC', 'NC', 'GA']; // we'll include the cases, deaths, and symptoms for these states
+    const confirmedCircles = {};
+    const deathCircles = {};
+    const symptomCircles = {};
+    const today = new Date();
+    const yesterday = new Date();
     yesterday.setDate(yesterday.getDate()-1);
 
-    var tdd = String(today.getDate()).padStart(2, '0');
-    var tmm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0
-    var ydd = String(yesterday.getDate()).padStart(2, '0');
-    var ymm = String(yesterday.getMonth() + 1).padStart(2, '0'); // January is 0
-    var tyyyy = today.getFullYear();
-    var yyyyy = yesterday.getFullYear();
-
-    //var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
-    //var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
-    //var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
-    var jsonfile = "https://covidsc.com/data/covid_latest.json?v=6";
-    //var jsonfile = "data/covid_latest.json";
-    console.log('loading json file ' + jsonfile);
+    // var jsonfile = "https://mymed.udifi.com/data/covid_latest.json";
+    // var jsonfile = "http://covidsc.com.s3-website.us-east-2.amazonaws.com/data/covid_latest.json";
+    // var jsonfile = "https://d3e6xqdw3pm38f.cloudfront.net/data/covid_latest.json";
+    const jsonfile = "https://covidsc.com/data/covid_latest.json?v=6";
+    // var jsonfile = "data/covid_latest.json";
+    console.log(`loading json file ${  jsonfile}`);
     function commas(num, decimalPlaces=0){
       return num.toLocaleString(undefined, {maximumFractionDigits:decimalPlaces})
 
@@ -265,48 +327,39 @@ export class CovidScPageHome extends LitElement {
     fetch(jsonfile)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      //json = JSON.parse(data);
-      var allDeaths = 0;
-      var allConfirmed = 0;
-      var allDeathsChange = 0;
-      var allConfirmedChange = 0;
-      var lastDate = yesterday;
+      const strokeOpacity = 0.8;
 
-      var strokeOpacity = 0.8;
-      //var confirmedCircles = {}
-      //var deathCircles = {}
-      var HotCounties = new Array();
+      let HotCounties = [];
 
       data.forEach((d) => {
         d.LastUpdate = d.LastUpdate.replace(' ', 'T');
-        if (d.Country == 'USA' && statesToInclude.includes(d.State) && d.County != 'ALL'){
+        if (d.Country === 'USA' && statesToInclude.includes(d.State) && d.County !== 'ALL'){
           HotCounties.push({State: d.State, County: d.County, Confirmed_POPADJ_GF: d.Confirmed_POPADJ_GF, Confirmed_POPADJ_GF_Change: d.Confirmed_POPADJ_GF_Change});
           // if (d.Deaths_Change != 0) { console.log(d.County + ' deaths up ' + d.Deaths_Change); }
-          // if (d.Confirmed > 0){
-          //   confirmedCircles[d.County] = {
-          //     center: {lat: d.Lat, lng: d.Long},
-          //     population: d.Confirmed * 500,
-          //     header: d.County + ', ' + d.State + ' Confirmed Cases',
-          //     content: d.Confirmed + ' confirmed cases (+'+d.Confirmed_Change+' since yesterday)',
-          //     color: '#FF0000',
-          //     strokeOpacity: strokeOpacity
-          //   };
-          // }
-          // if (d.Deaths>0) {
-          //   deathCircles[d.County] = {
-          //     center: {lat: d.Lat, lng: d.Long},
-          //     population: d.Deaths * 700,
-          //     header: d.County + ', SC Deaths',
-          //     content: d.Deaths + ' deaths (+'+d.Deaths_Change+' since yesterday)',
-          //     color: '#0000FF',
-          //     strokeOpacity: strokeOpacity
-          //   };
-          // }
+          if (d.Confirmed > 0){
+            confirmedCircles[d.County] = {
+              center: {lat: d.Lat, lng: d.Long},
+              population: d.Confirmed * 500,
+              header: `${d.County  }, ${  d.State  } Confirmed Cases`,
+              content: `${d.Confirmed  } confirmed cases (+${d.Confirmed_Change} since yesterday)`,
+              color: '#FF0000',
+              strokeOpacity
+            };
+          }
+          if (d.Deaths>0) {
+            deathCircles[d.County] = {
+              center: {lat: d.Lat, lng: d.Long},
+              population: d.Deaths * 700,
+              header: `${d.County  }, SC Deaths`,
+              content: `${d.Deaths  } deaths (+${d.Deaths_Change} since yesterday)`,
+              color: '#0000FF',
+              strokeOpacity
+            };
+          }
         }
 
         // calculate state counts
-        if (d.Country == 'USA' && d.State == 'SC' && d.County == 'ALL') {
+        if (d.Country === 'USA' && d.State === 'SC' && d.County === 'ALL') {
           this.counts.state = { "confirmed" : commas(d.Confirmed), "deaths" : commas(d.Deaths), "confirmedChanged" : commas(d.Confirmed_Change), "deathsChanged" : commas(d.Deaths_Change)};
           if(d.Confirmed_Change > 0) this.counts.state.confirmedChanged = `+${this.counts.state.confirmedChanged }`;
           if(d.Deaths_Change > 0) this.counts.state.deathsChanged = `+${this.counts.state.deathsChanged }`;
@@ -315,7 +368,7 @@ export class CovidScPageHome extends LitElement {
         }
 
         // this looks like the header counts for USA
-        if (d.Country == 'USA' && d.State == 'ALL'){
+        if (d.Country === 'USA' && d.State === 'ALL'){
           this.counts.national = { "confirmed" : commas(d.Confirmed), "deaths" : commas(d.Deaths), "confirmedChanged" : commas(d.Confirmed_Change), "deathsChanged" : commas(d.Deaths_Change)};
           if(d.Confirmed_Change > 0) this.counts.national.confirmedChanged = `+${this.counts.national.confirmedChanged }`;
           if(d.Deaths_Change > 0) this.counts.national.deathsChanged = `+${this.counts.national.deathsChanged }`;
@@ -324,50 +377,24 @@ export class CovidScPageHome extends LitElement {
         }
 
       });
-      HotCounties = HotCounties.sort(function(a,b) { return b.Confirmed_POPADJ_GF - a.Confirmed_POPADJ_GF; }); //sort descending
+      HotCounties = HotCounties.sort((a,b) => b.Confirmed_POPADJ_GF - a.Confirmed_POPADJ_GF); // sort descending
 
-      for (var i = 0; i<HotCounties.length; i++){
-        var countyObj = HotCounties[i];
+      for (let i = 0; i<HotCounties.length; i++){
+        const countyObj = HotCounties[i];
         if (countyObj.Confirmed_POPADJ_GF > 10){
           // console.log(c.County + ': ' + c.Confirmed_POPADJ_GF);
           countyObj.County += " County";
           countyObj.Confirmed_POPADJ_GF = countyObj.Confirmed_POPADJ_GF.toFixed(2);
           countyObj.Confirmed_POPADJ_GF_Change = countyObj.Confirmed_POPADJ_GF_Change.toFixed(2);
           if (countyObj.Confirmed_POPADJ_GF_Change >= 0) {
-            countyObj.Confirmed_POPADJ_GF_Change = "+" + countyObj.Confirmed_POPADJ_GF_Change;
+            countyObj.Confirmed_POPADJ_GF_Change = `+${  countyObj.Confirmed_POPADJ_GF_Change}`;
           }
           this.countyList = [...this.countyList, countyObj];
         }
       }
-      this.requestUpdate();
-
-      // console.log(HotCounties);
+      this.hotspots = { "confirmedCircles" : confirmedCircles, "deathCircles" : deathCircles };
       // console.log(confirmedCircles);
-      // console.log(deathCircles);
-      // var map = initMap();
-      // drawCircles(map, confirmedCircles);
-      // drawCircles(map, deathCircles);
-      // var cnyjson = "https://api.covidnearyou.org/markers/";
-      // fetch(cnyjson)
-      // .then(response => response.json())
-      // .then(data => {
-      //   console.log(data);
-      //   let color = "#FF8000";
-      //   data.forEach((d) => {
-      //     if (statesToInclude.includes(d.state)){
-      //       symptomCircles[d.city] = {
-      //         center: {lat: d.lat, lng: d.long},
-      //         population: d.symptoms * 1000,
-      //         header: d.city + ', ' + d.state + ' Symptoms Reported',
-      //         content: d.symptoms + ' COVID+ symptoms reported',
-      //         color: color,
-      //         strokeOpacity: 0.1,
-      //         fillOpacity: 0.7
-      //       };
-      //     }
-      //   })
-      //   drawCircles(map, symptomCircles);
-      // });
+      this.requestUpdate();
 
     });
   }

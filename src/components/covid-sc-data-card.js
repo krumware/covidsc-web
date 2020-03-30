@@ -31,7 +31,7 @@ export class CovidScDataCard extends LitElement {
       css`
         :host([ghost]) {
           height: 0px;
-          margin: 6px 8px;
+          /* margin: 6px 8px; */
         }
         :host([ghost]) > .content {
           display: none;
@@ -39,7 +39,7 @@ export class CovidScDataCard extends LitElement {
         :host {
           border-radius: 4px;
           background-color: #f0f0f0;
-          margin: 6px 8px;
+          /* margin: 6px 8px; */
           overflow: hidden;
         }
         .title {
@@ -47,9 +47,11 @@ export class CovidScDataCard extends LitElement {
           line-height: 32px;
           background-color: #d8d8d8;
         }
-
-        .content {
-
+        .value {
+          color: #393939;
+        }
+        .delta {
+          color: #8c8c8c;
         }
 
       `
