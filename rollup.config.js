@@ -27,6 +27,7 @@ import { generateSW } from 'rollup-plugin-workbox';
 
 const config = createCompatibilityConfig({
   input: './index.html',
+  outputDir: 'docs',
   plugins: [
   ],
 });
@@ -40,15 +41,15 @@ export default [
       copy({
         // copy over all images files
         files: ['src/**/*.png','src/**/*.json'],
-        dest: 'dist',
+        dest: 'docs',
         options: {
           // parents makes sure to preserve the original folder structure
           parents: true,
         },
       }),
       generateSW({
-        swDest: '/dist/sw.js',
-        globDirectory: '/dist/',
+        swDest: '/docs/sw.js',
+        globDirectory: '/docs/',
       })
     ],
   },
